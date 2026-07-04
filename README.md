@@ -15,20 +15,22 @@ O objetivo é desenvolver um sistema moderno, seguro e organizado que possa serv
 ---
 
 # 🏗️ Arquitetura
-
 ```mermaid
 erDiagram
+    %% ==================== RELACIONAMENTOS ====================
     EMPRESA ||--o{ USUARIO : "1:N (barbeiros e admins)"
-    USUARIO ||--o{ AGENDAMENTO : "como cliente 1:N"
-    USUARIO ||--o{ AGENDAMENTO : "como barbeiro 1:N"
+    USUARIO ||--o{ AGENDAMENTO : "cliente 1:N"
+    USUARIO ||--o{ AGENDAMENTO : "barbeiro 1:N"
     EMPRESA ||--o{ SERVICO : "1:N"
     SERVICO ||--o{ AGENDAMENTO : "1:N"
     USUARIO ||--o{ HORARIOTRABALHO : "barbeiro 1:N"
     USUARIO ||--o{ OAUTHACCOUNT : "1:0..N (login social)"
 
+    %% ==================== ENTIDADES ====================
+
     EMPRESA {
         int id PK
-        string cod_empresa UK
+        string cod_empresa "UNIQUE"
         string nome
         string cnpj
         string endereco
@@ -40,11 +42,11 @@ erDiagram
     USUARIO {
         int id PK
         string nome
-        string email UK
-        string senha
+        string email "UNIQUE"
+        string senha "BCrypt (nullable se OAuth)"
         string telefone
-        enum tipo_usuario "CLIENTE | BARBEIRO | ADMIN_BARBearia"
-        enum status "PENDING_APPROVAL | ACTIVE | INACTIVE | REJECTED"
+        string tipo_usuario "CLIENTE | BARBEIRO | ADMIN_BARBearia"
+        string status "PENDING_APPROVAL | ACTIVE | INACTIVE | REJECTED"
         int id_empresa FK "nullable para CLIENTE"
         timestamp created_at
         timestamp updated_at
@@ -75,7 +77,7 @@ erDiagram
         int id_servico FK
         timestamp data_hora_inicio
         timestamp data_hora_fim
-        enum status "PENDENTE | CONFIRMADO | CANCELADO_* | CONCLUIDO | NO_SHOW"
+        string status "PENDENTE | CONFIRMADO | CANCELADO | CONCLUIDO | NO_SHOW"
         text observacoes
         timestamp created_at
     }
@@ -83,15 +85,12 @@ erDiagram
     HORARIOTRABALHO {
         int id PK
         int id_barbeiro FK
-        int dia_semana "0-6"
+        int dia_semana "0=Domingo ... 6=Sábado"
         time hora_inicio
         time hora_fim
         boolean ativo
     }
 ```
-
----
-
 # 🎯 Objetivos
 
 - Digitalizar o gerenciamento de uma barbearia.
