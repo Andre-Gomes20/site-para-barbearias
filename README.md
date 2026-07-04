@@ -17,21 +17,77 @@ O objetivo é desenvolver um sistema moderno, seguro e organizado que possa serv
 # 🏗️ Arquitetura
 
 ```
-                 ┌─────────────────────┐
-                 │ Aplicativo Mobile   │
-                 │ Kotlin / RN / etc.  │
-                 └──────────┬──────────┘
-                            │
-                            │ HTTP/JSON
-                            │
-┌───────────────┐     ┌─────▼──────────┐
-│ Front-end Web │────▶│    API REST    │
-│ React         │     │ Spring Boot    │
-└───────────────┘     └─────┬──────────┘
-                            │
-                     ┌──────▼───────┐
-                     │ PostgreSQL    │
-                     └───────────────┘
+erDiagram
+    EMPRESA ||--o{ USUARIO : "1:N (barbeiros e admins)"
+    USUARIO ||--o{ AGENDAMENTO : "como cliente 1:N"
+    USUARIO ||--o{ AGENDAMENTO : "como barbeiro 1:N"
+    EMPRESA ||--o{ SERVICO : "1:N"
+    SERVICO ||--o{ AGENDAMENTO : "1:N"
+    USUARIO ||--o{ HORARIOTRABALHO : "barbeiro 1:N"
+    USUARIO ||--o{ OAUTHACCOUNT : "1:0..N (login social)"
+
+    EMPRESA {
+        int id PK
+        string cod_empresa UK
+        string nome
+        string cnpj
+        string endereco
+        string telefone
+        string email
+        timestamp created_at
+    }
+
+    USUARIO {
+        int id PK
+        string nome
+        string email UK
+        string senha
+        string telefone
+        enum tipo_usuario "CLIENTE | BARBEIRO | ADMIN_BARBearia"
+        enum status "PENDING_APPROVAL | ACTIVE | INACTIVE | REJECTED"
+        int id_empresa FK "nullable para CLIENTE"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    OAUTHACCOUNT {
+        int id PK
+        int user_id FK
+        string provider "google"
+        string provider_user_id
+        timestamp created_at
+    }
+
+    SERVICO {
+        int id PK
+        int id_empresa FK
+        string nome
+        int duracao_minutos
+        decimal preco
+        string descricao
+        boolean ativo
+    }
+
+    AGENDAMENTO {
+        int id PK
+        int id_cliente FK
+        int id_barbeiro FK
+        int id_servico FK
+        timestamp data_hora_inicio
+        timestamp data_hora_fim
+        enum status "PENDENTE | CONFIRMADO | CANCELADO_* | CONCLUIDO | NO_SHOW"
+        text observacoes
+        timestamp created_at
+    }
+
+    HORARIOTRABALHO {
+        int id PK
+        int id_barbeiro FK
+        int dia_semana "0-6"
+        time hora_inicio
+        time hora_fim
+        boolean ativo
+    }
 ```
 
 ---
