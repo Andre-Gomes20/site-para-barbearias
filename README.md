@@ -16,7 +16,7 @@ O objetivo é desenvolver um sistema moderno, seguro e organizado que possa serv
 
 # 🏗️ Arquitetura
 
-```
+```mermaid
 erDiagram
     EMPRESA ||--o{ USUARIO : "1:N (barbeiros e admins)"
     USUARIO ||--o{ AGENDAMENTO : "como cliente 1:N"
