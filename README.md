@@ -421,28 +421,95 @@ O banco foi modelado para garantir integridade referencial e permitir futuras ex
 # 📂 Estrutura do Projeto
 
 ```
-barberflow/
+sistema-barbearias/
+├── README.md                          # Visão geral do projeto + instruções
+├── CONTRIBUTING.md                    # Como contribuir (opcional)
+├── docker-compose.yml                 # Orquestração de todos os serviços
+├── docker-compose.dev.yml             # Versão para desenvolvimento local
+├── .env.example                       # Variáveis de ambiente (template)
+├── .gitignore
 │
-├── backend/
+├── docs/                              # Documentação do projeto
+│   ├── DER.md                         # Diagrama Entidade-Relacionamento
+│   ├── arquitetura.md
+│   ├── api-java.md
+│   └── ml-analytics.md
+│
+├── backend-java/                      # ← Responsabilidade: Pontes
+│   ├── pom.xml
+│   ├── Dockerfile
+│   ├── .dockerignore
+│   └── src/
+│       ├── main/
+│       │   ├── java/com/barbeariasystem/
+│       │   │   ├── BarbershopApplication.java
+│       │   │   ├── config/            # Security, CORS, OpenAPI, etc.
+│       │   │   ├── controller/        # REST Controllers
+│       │   │   ├── service/           # Regras de negócio
+│       │   │   ├── repository/        # Spring Data JPA
+│       │   │   ├── entity/            # Entidades JPA
+│       │   │   ├── dto/               # Data Transfer Objects
+│       │   │   ├── mapper/            # MapStruct ou manual
+│       │   │   ├── security/          # JWT, OAuth2, filtros
+│       │   │   ├── exception/         # Tratamento de erros global
+│       │   │   └── util/
+│       │   └── resources/
+│       │       ├── application.yml
+│       │       └── db/migration/      # Flyway migrations (V1__init.sql)
+│       └── test/
+│           └── java/...               # Testes unitários e de integração
+│
+├── frontend/                          # ← Responsabilidade: Pontes
+│   ├── public/
 │   ├── src/
-│   ├── controller/
-│   ├── service/
-│   ├── repository/
-│   ├── entity/
-│   ├── dto/
-│   └── config/
+│   │   ├── assets/
+│   │   ├── components/                # Componentes reutilizáveis (shadcn/ui, etc.)
+│   │   ├── pages/                     # Páginas/Rotas (Login, Dashboard, etc.)
+│   │   ├── layouts/                   # Layouts principais
+│   │   ├── services/                  # Chamadas à API (axios/fetch)
+│   │   ├── hooks/                     # Custom hooks
+│   │   ├── types/                     # TypeScript interfaces/types
+│   │   ├── utils/                     # Funções utilitárias
+│   │   ├── contexts/                  # Context API (Auth, Theme, etc.)
+│   │   ├── App.tsx
+│   │   ├── main.tsx
+│   │   └── index.css
+│   ├── package.json
+│   ├── tsconfig.json
+│   ├── tailwind.config.js
+│   ├── vite.config.ts                 # ou next.config.js
+│   ├── Dockerfile
+│   └── .env.example
 │
-├── frontend/
-│   ├── src/
-│   ├── pages/
-│   ├── components/
-│   ├── hooks/
-│   ├── services/
-│   └── assets/
+├── analytics/                         # ← Responsabilidade: André (FastAPI + ML)
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── main.py                    # FastAPI app
+│   │   ├── api/                       # Rotas (routers)
+│   │   │   ├── reports.py
+│   │   │   └── ml.py
+│   │   ├── core/                      # Configurações, segurança, database
+│   │   ├── models/                    # Pydantic models + SQLAlchemy models
+│   │   ├── services/                  # Lógica de relatórios
+│   │   ├── ml/                        # Modelos de Machine Learning
+│   │   │   ├── forecast.py
+│   │   │   └── utils.py
+│   │   └── db/                        # Conexão com PostgreSQL
+│   ├── alembic/                       # Migrations (se usar Alembic)
+│   ├── requirements.txt
+│   ├── Dockerfile
+│   └── .env.example
 │
-├── docs/
+├── database/
+│   ├── init/
+│   │   └── init.sql                   # Script inicial do banco (seed data)
+│   └── migrations/                    # Migrations manuais (se não usar Flyway/Alembic)
 │
-└── README.md
+├── shared/                            # Coisas compartilhadas (opcional)
+│   └── openapi/                       # Specs da API (para gerar clients)
+│
+└── infrastructure/
+    └── nginx/                         # (Futuro) Reverse proxy / Load balancer
 ```
 
 ---
