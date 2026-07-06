@@ -1,0 +1,7 @@
+pydothenv
+pandas
+scikit-learn
+alembic 
+numpy
+fastapi
+uvicorn

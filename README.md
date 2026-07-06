@@ -15,27 +15,82 @@ O objetivo é desenvolver um sistema moderno, seguro e organizado que possa serv
 ---
 
 # 🏗️ Arquitetura
+```mermaid
+erDiagram
+    %% ==================== RELACIONAMENTOS ====================
+    EMPRESA ||--o{ USUARIO : "1:N (barbeiros e admins)"
+    USUARIO ||--o{ AGENDAMENTO : "cliente 1:N"
+    USUARIO ||--o{ AGENDAMENTO : "barbeiro 1:N"
+    EMPRESA ||--o{ SERVICO : "1:N"
+    SERVICO ||--o{ AGENDAMENTO : "1:N"
+    USUARIO ||--o{ HORARIOTRABALHO : "barbeiro 1:N"
+    USUARIO ||--o{ OAUTHACCOUNT : "1:0..N (login social)"
 
+    %% ==================== ENTIDADES ====================
+
+    EMPRESA {
+        int id PK
+        string cod_empresa "UNIQUE"
+        string nome
+        string cnpj
+        string endereco
+        string telefone
+        string email
+        timestamp created_at
+    }
+
+    USUARIO {
+        int id PK
+        string nome
+        string email "UNIQUE"
+        string senha "BCrypt (nullable se OAuth)"
+        string telefone
+        string tipo_usuario "CLIENTE | BARBEIRO | ADMIN_BARBearia"
+        string status "PENDING_APPROVAL | ACTIVE | INACTIVE | REJECTED"
+        int id_empresa FK "nullable para CLIENTE"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    OAUTHACCOUNT {
+        int id PK
+        int user_id FK
+        string provider "google"
+        string provider_user_id
+        timestamp created_at
+    }
+
+    SERVICO {
+        int id PK
+        int id_empresa FK
+        string nome
+        int duracao_minutos
+        decimal preco
+        string descricao
+        boolean ativo
+    }
+
+    AGENDAMENTO {
+        int id PK
+        int id_cliente FK
+        int id_barbeiro FK
+        int id_servico FK
+        timestamp data_hora_inicio
+        timestamp data_hora_fim
+        string status "PENDENTE | CONFIRMADO | CANCELADO | CONCLUIDO | NO_SHOW"
+        text observacoes
+        timestamp created_at
+    }
+
+    HORARIOTRABALHO {
+        int id PK
+        int id_barbeiro FK
+        int dia_semana "0=Domingo ... 6=Sábado"
+        time hora_inicio
+        time hora_fim
+        boolean ativo
+    }
 ```
-                 ┌─────────────────────┐
-                 │ Aplicativo Mobile   │
-                 │ Kotlin / RN / etc.  │
-                 └──────────┬──────────┘
-                            │
-                            │ HTTP/JSON
-                            │
-┌───────────────┐     ┌─────▼──────────┐
-│ Front-end Web │────▶│    API REST    │
-│ React         │     │ Spring Boot    │
-└───────────────┘     └─────┬──────────┘
-                            │
-                     ┌──────▼───────┐
-                     │ PostgreSQL    │
-                     └───────────────┘
-```
-
----
-
 # 🎯 Objetivos
 
 - Digitalizar o gerenciamento de uma barbearia.
@@ -366,28 +421,95 @@ O banco foi modelado para garantir integridade referencial e permitir futuras ex
 # 📂 Estrutura do Projeto
 
 ```
-barberflow/
+sistema-barbearias/
+├── README.md                          # Visão geral do projeto + instruções
+├── CONTRIBUTING.md                    # Como contribuir (opcional)
+├── docker-compose.yml                 # Orquestração de todos os serviços
+├── docker-compose.dev.yml             # Versão para desenvolvimento local
+├── .env.example                       # Variáveis de ambiente (template)
+├── .gitignore
 │
-├── backend/
+├── docs/                              # Documentação do projeto
+│   ├── DER.md                         # Diagrama Entidade-Relacionamento
+│   ├── arquitetura.md
+│   ├── api-java.md
+│   └── ml-analytics.md
+│
+├── backend-java/                      # ← Responsabilidade: Pontes
+│   ├── pom.xml
+│   ├── Dockerfile
+│   ├── .dockerignore
+│   └── src/
+│       ├── main/
+│       │   ├── java/com/barbeariasystem/
+│       │   │   ├── BarbershopApplication.java
+│       │   │   ├── config/            # Security, CORS, OpenAPI, etc.
+│       │   │   ├── controller/        # REST Controllers
+│       │   │   ├── service/           # Regras de negócio
+│       │   │   ├── repository/        # Spring Data JPA
+│       │   │   ├── entity/            # Entidades JPA
+│       │   │   ├── dto/               # Data Transfer Objects
+│       │   │   ├── mapper/            # MapStruct ou manual
+│       │   │   ├── security/          # JWT, OAuth2, filtros
+│       │   │   ├── exception/         # Tratamento de erros global
+│       │   │   └── util/
+│       │   └── resources/
+│       │       ├── application.yml
+│       │       └── db/migration/      # Flyway migrations (V1__init.sql)
+│       └── test/
+│           └── java/...               # Testes unitários e de integração
+│
+├── frontend/                          # ← Responsabilidade: Pontes
+│   ├── public/
 │   ├── src/
-│   ├── controller/
-│   ├── service/
-│   ├── repository/
-│   ├── entity/
-│   ├── dto/
-│   └── config/
+│   │   ├── assets/
+│   │   ├── components/                # Componentes reutilizáveis (shadcn/ui, etc.)
+│   │   ├── pages/                     # Páginas/Rotas (Login, Dashboard, etc.)
+│   │   ├── layouts/                   # Layouts principais
+│   │   ├── services/                  # Chamadas à API (axios/fetch)
+│   │   ├── hooks/                     # Custom hooks
+│   │   ├── types/                     # TypeScript interfaces/types
+│   │   ├── utils/                     # Funções utilitárias
+│   │   ├── contexts/                  # Context API (Auth, Theme, etc.)
+│   │   ├── App.tsx
+│   │   ├── main.tsx
+│   │   └── index.css
+│   ├── package.json
+│   ├── tsconfig.json
+│   ├── tailwind.config.js
+│   ├── vite.config.ts                 # ou next.config.js
+│   ├── Dockerfile
+│   └── .env.example
 │
-├── frontend/
-│   ├── src/
-│   ├── pages/
-│   ├── components/
-│   ├── hooks/
-│   ├── services/
-│   └── assets/
+├── analytics/                         # ← Responsabilidade: André (FastAPI + ML)
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── main.py                    # FastAPI app
+│   │   ├── api/                       # Rotas (routers)
+│   │   │   ├── reports.py
+│   │   │   └── ml.py
+│   │   ├── core/                      # Configurações, segurança, database
+│   │   ├── models/                    # Pydantic models + SQLAlchemy models
+│   │   ├── services/                  # Lógica de relatórios
+│   │   ├── ml/                        # Modelos de Machine Learning
+│   │   │   ├── forecast.py
+│   │   │   └── utils.py
+│   │   └── db/                        # Conexão com PostgreSQL
+│   ├── alembic/                       # Migrations (se usar Alembic)
+│   ├── requirements.txt
+│   ├── Dockerfile
+│   └── .env.example
 │
-├── docs/
+├── database/
+│   ├── init/
+│   │   └── init.sql                   # Script inicial do banco (seed data)
+│   
 │
-└── README.md
+├── shared/                            # Coisas compartilhadas (opcional)
+│   └── openapi/                       # Specs da API (para gerar clients)
+│
+└── infrastructure/
+    └── nginx/                         # (Futuro) Reverse proxy / Load balancer
 ```
 
 ---
