@@ -1,0 +1,68 @@
+{
+  "name": "Dev Container - Java 25 + Python + Node LTS + Docker",
+  "image": "mcr.microsoft.com/devcontainers/java:25-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "none",
+      "installMaven": "true",
+      "installGradle": "false"
+    },
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "latest",
+      "installTools": "true"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts",
+      "nodeGypDependencies": "true"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "moby": "true",
+      "enableNonRootDocker": "true",
+      "installDockerBuildx": "true"
+    },
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": "true",
+      "installOhMyZsh": "true",
+      "upgradePackages": "true"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "latest"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.black-formatter",
+        "ms-python.isort",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-azuretools.vscode-docker",
+        "eamodio.gitlens",
+        "github.vscode-github-actions",
+        "github.copilot",
+        "github.copilot-chat"
+      ],
+      "settings": {
+        "java.configuration.runtimes": [
+          {
+            "name": "JavaSE-25",
+            "path": "/usr/lib/jvm/msopenjdk-current",
+            "default": true
+          }
+        ],
+        "python.defaultInterpreterPath": "/usr/local/bin/python3",
+        "python.terminal.activateEnvironment": true,
+        "editor.formatOnSave": true
+      }
+    }
+  },
+  "remoteUser": "vscode",
+  "postCreateCommand": "echo '✅ Dev Container configurado com sucesso!' && java -version && mvn --version && python3 --version && node --version && docker --version",
+  "forwardPorts": [],
+  "portsAttributes": {},
+  "mounts": []
+}
