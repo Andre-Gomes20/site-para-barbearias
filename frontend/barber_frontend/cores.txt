@@ -1,0 +1,54 @@
+PALETA OFICIAL DE CORES - BARBEARIA (Sistema Lucrativo)
+
+=== CORES PRINCIPAIS ===
+
+1. Primária (Black Deep) 
+   HEX: #1A1A1A
+   RGB: 26, 26, 26
+   Função: 
+   - Fundo principal de telas (Dashboard, Admin, Login)
+   - Headers, Sidebar, Navbar
+   - Textos principais e cards escuros
+
+2. Secundária (Gold Premium)
+   HEX: #D4AF37
+   RGB: 212, 175, 55
+   Função:
+   - Botões principais (Agendar, Confirmar, Salvar)
+   - Destaques na Agenda (horários disponíveis)
+   - Ícones de sucesso, Portfólio e serviços premium
+   - Bordas e acentos de luxo
+
+3. Acento Energético (Red Barber)
+   HEX: #C8102E
+   RGB: 200, 16, 46
+   Função:
+   - Call-to-Actions urgentes ("Agendar Agora")
+   - Status de agendamento (pendente/confirmado)
+   - Alertas, notificações e erros
+   - Destaque no Polo de barbearia e logo
+
+4. Neutro Claro (Off-White)
+   HEX: #F5F5F5
+   RGB: 245, 245, 245
+   Função:
+   - Fundos de cards, formulários (Cadastro, Login, Adicionar Serviço)
+   - Textos secundários em fundos escuros
+   - Tabelas de Relatórios
+
+5. Neutro Médio (Dark Gray)
+   HEX: #4D4D4D
+   RGB: 77, 77, 77
+   Função:
+   - Textos secundários, labels, bordas
+   - Separadores e linhas na Agenda
+
+=== CORES DE SUPORTE ===
+
+- Verde Frescor (Cabelo Saudável)
+  HEX: #0F3D2B
+  Uso: Destaques de serviços concluídos e saúde capilar
+
+- Azul Marinho (Alternativa Premium)
+  HEX: #0A2540
+  Uso: Telas Admin e Relatórios financeiros
