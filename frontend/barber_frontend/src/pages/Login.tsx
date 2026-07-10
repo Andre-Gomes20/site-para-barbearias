@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import './Login.css'
 
 function ScissorsIcon() {
@@ -128,7 +129,7 @@ export default function Login() {
         </form>
 
         <footer className="login-footer">
-          Não tem conta? <a href="#cadastro">Criar conta</a>
+          Não tem conta? <Link to="/cadastro">Criar conta</Link>
         </footer>
       </div>
     </div>

@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS usuario (
     email VARCHAR(100) UNIQUE NOT NULL,
     senha VARCHAR(255) NOT NULL,
     telefone VARCHAR(20),
+    cpf VARCHAR(11) UNIQUE, -- obrigatório para BARBEIRO (apenas dígitos); null para CLIENTE/ADMIN
     tipo_usuario VARCHAR(20) NOT NULL
         CHECK (tipo_usuario IN ('CLIENTE', 'BARBEIRO', 'ADMIN_BARBEARIA')),
     status VARCHAR(20) DEFAULT 'PENDING_APPROVAL'
@@ -39,6 +40,9 @@ CREATE TABLE IF NOT EXISTS usuario (
     CONSTRAINT chk_usuario_empresa CHECK (
         tipo_usuario = 'CLIENTE'
         OR (tipo_usuario IN ('BARBEIRO', 'ADMIN_BARBEARIA') AND id_empresa IS NOT NULL)
+    ),
+    CONSTRAINT chk_usuario_cpf_barbeiro CHECK (
+        tipo_usuario <> 'BARBEIRO' OR cpf IS NOT NULL
     )
 );
 
@@ -137,6 +141,7 @@ CREATE TABLE IF NOT EXISTS notificacao (
 -- ÍNDICES
 -- =============================================
 CREATE INDEX IF NOT EXISTS idx_usuario_email ON usuario(email);
+CREATE INDEX IF NOT EXISTS idx_usuario_cpf ON usuario(cpf);
 CREATE INDEX IF NOT EXISTS idx_usuario_empresa ON usuario(id_empresa);
 CREATE INDEX IF NOT EXISTS idx_agendamento_data ON agendamento(data_hora_inicio);
 CREATE INDEX IF NOT EXISTS idx_agendamento_barbeiro ON agendamento(id_barbeiro, data_hora_inicio);
@@ -173,13 +178,14 @@ VALUES (
 )
 ON CONFLICT (email) DO NOTHING;
 
--- Barbeiro de exemplo
-INSERT INTO usuario (nome, email, senha, telefone, tipo_usuario, status, id_empresa)
+-- Barbeiro de exemplo (CPF de exemplo válido apenas para seed)
+INSERT INTO usuario (nome, email, senha, telefone, cpf, tipo_usuario, status, id_empresa)
 VALUES (
     'João Barbeiro',
     'joao@barbearia.com',
     '$2a$10$examplehash1234567890abcdef',
     '(11) 97777-7777',
+    '52998224725',
     'BARBEIRO',
     'ACTIVE',
     1
