@@ -1,6 +1,8 @@
 import { useState, type FormEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import './Login.css'
+
 
 function ScissorsIcon() {
   return (
@@ -15,6 +17,8 @@ function ScissorsIcon() {
 }
 
 export default function Login() {
+  const { login } = useAuth()
+  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [remember, setRemember] = useState(false)
@@ -47,11 +51,18 @@ export default function Login() {
     setLoading(true)
     setErrors({})
 
-    // Placeholder — integrar com a API de autenticação
-    await new Promise((r) => setTimeout(r, 800))
-    setLoading(false)
-    setErrors({ form: 'Login ainda não conectado à API. Em breve!' })
+    try {
+      // Demo: e-mails com "admin" ou "barbeiro" definem o role
+      // Ex.: admin@barbearia.com | barbeiro@barbearia.com | cliente@email.com
+      await login(email, password)
+      navigate('/dashboard', { replace: true })
+    } catch {
+      setErrors({ form: 'Não foi possível entrar. Tente novamente.' })
+    } finally {
+      setLoading(false)
+    }
   }
+
 
   return (
     <div className="login-page">
