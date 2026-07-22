@@ -10,6 +10,7 @@ import {
   Sparkles,
   Star,
 } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import SectionTitle from '../../components/dashboard/SectionTitle'
 import AppointmentCard, {
   type Appointment,
@@ -97,6 +98,7 @@ const HISTORICO: Appointment[] = [
 
 export default function DashboardCliente({ userName }: DashboardClienteProps) {
   const firstName = userName.split(' ')[0]
+  const navigate = useNavigate()
 
   return (
     <div className="space-y-8">
@@ -128,10 +130,7 @@ export default function DashboardCliente({ userName }: DashboardClienteProps) {
           label="Agendar Novo Horário"
           icon={CalendarPlus}
           variant="gold"
-          onClick={() => {
-            // Navegar para /agendar quando a rota existir
-            window.location.hash = 'agendar'
-          }}
+          onClick={() => navigate('/agendamento')}
         />
       </section>
 
@@ -193,6 +192,7 @@ export default function DashboardCliente({ userName }: DashboardClienteProps) {
                 <span className="text-lg font-bold text-barber-gold">{svc.price}</span>
                 <button
                   type="button"
+                  onClick={() => navigate('/agendamento')}
                   className="rounded-lg bg-white/5 px-3 py-2 text-sm font-medium text-barber-light hover:bg-barber-gold hover:text-barber-black transition-colors min-h-[40px]"
                 >
                   Agendar

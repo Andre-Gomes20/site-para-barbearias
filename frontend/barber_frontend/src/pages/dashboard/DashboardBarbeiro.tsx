@@ -3,6 +3,7 @@
  * — Agenda do dia, métricas de performance, ações rápidas e próximos clientes.
  */
 
+import { Link } from 'react-router-dom'
 import {
   CalendarDays,
   DollarSign,
@@ -154,16 +155,19 @@ export default function DashboardBarbeiro({ userName }: DashboardBarbeiroProps) 
         />
       </section>
 
-      {/* Agenda do dia */}
+      {/* Agenda do dia (resumo) — ver página completa em /dashboard/agenda */}
       <section id="agenda">
         <SectionTitle
           title="Agenda do dia"
           subtitle="Horários em ordem cronológica"
           action={
-            <span className="inline-flex items-center gap-1.5 rounded-lg bg-barber-gray px-2.5 py-1.5 text-xs font-medium text-barber-light/70">
-              <CalendarDays className="h-3.5 w-3.5 text-barber-gold" />
-              Hoje
-            </span>
+            <Link
+              to="/dashboard/agenda"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-barber-gold/30 bg-barber-gold/15 px-2.5 py-1.5 text-xs font-semibold text-barber-gold transition-colors hover:bg-barber-gold/25"
+            >
+              <CalendarDays className="h-3.5 w-3.5" />
+              Ver agenda completa
+            </Link>
           }
         />
 

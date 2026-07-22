@@ -4,8 +4,10 @@
  */
 
 import type { ComponentType } from 'react'
+import { Link } from 'react-router-dom'
 import {
   Calendar,
+  CalendarPlus,
   ClipboardList,
   Home,
   LayoutDashboard,
@@ -28,19 +30,20 @@ export interface NavItem {
 
 const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
   cliente: [
-    { id: 'home', label: 'Início', icon: Home, href: '#inicio' },
-    { id: 'agenda', label: 'Meus Agendamentos', icon: Calendar, href: '#agendamentos' },
-    { id: 'servicos', label: 'Serviços', icon: Scissors, href: '#servicos' },
-    { id: 'historico', label: 'Histórico', icon: ClipboardList, href: '#historico' },
-    { id: 'config', label: 'Configurações', icon: Settings, href: '#config' },
+    { id: 'home', label: 'Início', icon: Home, href: '/dashboard#inicio' },
+    { id: 'novo-agendamento', label: 'Novo Agendamento', icon: CalendarPlus, href: '/agendamento' },
+    { id: 'agenda', label: 'Meus Agendamentos', icon: Calendar, href: '/dashboard#agendamentos' },
+    { id: 'servicos', label: 'Serviços', icon: Scissors, href: '/dashboard#servicos' },
+    { id: 'historico', label: 'Histórico', icon: ClipboardList, href: '/dashboard#historico' },
+    { id: 'config', label: 'Configurações', icon: Settings, href: '/dashboard#config' },
   ],
   barbeiro: [
-    { id: 'home', label: 'Início', icon: LayoutDashboard, href: '#inicio' },
-    { id: 'agenda', label: 'Agenda do Dia', icon: Calendar, href: '#agenda' },
-    { id: 'servicos', label: 'Serviços', icon: Scissors, href: '#servicos' },
-    { id: 'portfolio', label: 'Portfólio', icon: Image, href: '#portfolio' },
-    { id: 'clientes', label: 'Clientes', icon: Users, href: '#clientes' },
-    { id: 'config', label: 'Configurações', icon: Settings, href: '#config' },
+    { id: 'home', label: 'Início', icon: LayoutDashboard, href: '/dashboard' },
+    { id: 'agenda', label: 'Agenda do Dia', icon: Calendar, href: '/dashboard/agenda' },
+    { id: 'servicos', label: 'Serviços', icon: Scissors, href: '/dashboard#servicos' },
+    { id: 'portfolio', label: 'Portfólio', icon: Image, href: '/dashboard#portfolio' },
+    { id: 'clientes', label: 'Clientes', icon: Users, href: '/dashboard#clientes' },
+    { id: 'config', label: 'Configurações', icon: Settings, href: '/dashboard#config' },
   ],
   admin: [
     { id: 'home', label: 'Dashboard', icon: LayoutDashboard, href: '#inicio' },
@@ -106,20 +109,37 @@ export default function Sidebar({ role, open, onClose, activeId = 'home' }: Side
           {items.map((item) => {
             const Icon = item.icon
             const active = item.id === activeId
+            const isHashOnly = item.href.startsWith('#')
+            const className = `flex min-h-[48px] items-center gap-3 rounded-xl px-3.5 text-[15px] font-medium transition-colors ${
+              active
+                ? 'bg-barber-gold/15 text-barber-gold'
+                : 'text-barber-light/70 hover:bg-white/5 hover:text-barber-light'
+            }`
+
+            if (isHashOnly) {
+              return (
+                <a
+                  key={item.id}
+                  href={item.href}
+                  onClick={onClose}
+                  className={className}
+                >
+                  <Icon className="h-5 w-5 shrink-0" strokeWidth={2} />
+                  <span>{item.label}</span>
+                </a>
+              )
+            }
+
             return (
-              <a
+              <Link
                 key={item.id}
-                href={item.href}
+                to={item.href}
                 onClick={onClose}
-                className={`flex min-h-[48px] items-center gap-3 rounded-xl px-3.5 text-[15px] font-medium transition-colors ${
-                  active
-                    ? 'bg-barber-gold/15 text-barber-gold'
-                    : 'text-barber-light/70 hover:bg-white/5 hover:text-barber-light'
-                }`}
+                className={className}
               >
                 <Icon className="h-5 w-5 shrink-0" strokeWidth={2} />
                 <span>{item.label}</span>
-              </a>
+              </Link>
             )
           })}
         </nav>

@@ -102,6 +102,7 @@ export default function Dashboard() {
         role={user.role}
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
+        activeId="home"
       />
 
       <div className="flex min-w-0 flex-1 flex-col">
