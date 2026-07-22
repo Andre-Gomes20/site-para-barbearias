@@ -3,7 +3,7 @@
  * — Agenda do dia, métricas de performance, ações rápidas e próximos clientes.
  */
 
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   CalendarDays,
   DollarSign,
@@ -84,6 +84,7 @@ const STATUS_DOT: Record<string, string> = {
 }
 
 export default function DashboardBarbeiro({ userName }: DashboardBarbeiroProps) {
+  const navigate = useNavigate()
   const firstName = userName.split(' ')[0]
   const proximos = AGENDA_HOJE.filter(
     (a) => a.status === 'confirmado' || a.status === 'pendente',
@@ -141,17 +142,13 @@ export default function DashboardBarbeiro({ userName }: DashboardBarbeiroProps) 
           label="Adicionar Serviço"
           icon={PlusCircle}
           variant="gold"
-          onClick={() => {
-            window.location.hash = 'servicos'
-          }}
+          onClick={() => navigate('/dashboard/servicos')}
         />
         <QuickActionButton
           label="Gerenciar Portfólio"
           icon={ImagePlus}
           variant="outline"
-          onClick={() => {
-            window.location.hash = 'portfolio'
-          }}
+          onClick={() => navigate('/dashboard/portfolio')}
         />
       </section>
 

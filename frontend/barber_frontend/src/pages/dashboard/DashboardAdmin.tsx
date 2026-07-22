@@ -3,6 +3,7 @@
  * — Métricas gerais, gráfico de faturamento, agenda do dia e atalhos de cadastro.
  */
 
+import { Link } from 'react-router-dom'
 import {
   Calendar,
   DollarSign,
@@ -170,11 +171,19 @@ export default function DashboardAdmin() {
         />
       </section>
 
-      {/* Gráfico de faturamento */}
+      {/* Gráfico de faturamento — ver página completa em /dashboard/relatorios */}
       <section id="relatorios" className="rounded-2xl border border-white/5 bg-barber-black-soft p-4 sm:p-6">
         <SectionTitle
           title="Faturamento da semana"
           subtitle={`Total: ${formatBRL(totalSemana)}`}
+          action={
+            <Link
+              to="/dashboard/relatorios"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-barber-gold/30 bg-barber-gold/15 px-2.5 py-1.5 text-xs font-semibold text-barber-gold transition-colors hover:bg-barber-gold/25"
+            >
+              Ver relatórios
+            </Link>
+          }
         />
         <div className="h-56 sm:h-72 w-full -ml-2">
           <ResponsiveContainer width="100%" height="100%">
